@@ -11,7 +11,7 @@ supabase gen types --local > types/supabase.ts
 # Automate with git hooks:
 # .husky/pre-commit
 if git diff --cached --name-only | grep -q "supabase/migrations"; then
-  npm run types:generate
+  bun run types:generate
   git add types/supabase.ts
 fi
 ```
@@ -109,7 +109,7 @@ When working with Supabase databases, **ALWAYS** use migrations for ANY schema c
     # Right ✅
     supabase migration new add_views_to_posts
     # Then write SQL in the generated file
-    # Then: supabase db reset && npm run db:types
+    # Then: supabase db reset && bun run db:types
     ```
 6. **Include in EVERY migration**:
     
@@ -285,10 +285,10 @@ export async function signOut()
 
 ```bash
 # Initialize shadcn/ui with Tailwind v4
-npx shadcn@latest init
+bunx shadcn@latest init
 
 # Add components as needed
-npx shadcn@latest add button form card toast
+bunx shadcn@latest add button form card toast
 ```
 
 ```typescript
@@ -366,7 +366,7 @@ export function useRealtime<T extends keyof Database['public']['Tables']>(
 ### Setup
 
 ```bash
-npm i -D vitest @testing-library/react @testing-library/user-event @vitejs/plugin-react jsdom
+bun i -D vitest @testing-library/react @testing-library/user-event @vitejs/plugin-react jsdom
 ```
 
 ```typescript
@@ -619,23 +619,23 @@ export const env = envSchema.parse(process.env)
 
 ```bash
 # Development
-npm run dev --turbo          # Fast refresh with Turbopack
+bun run dev --turbo          # Fast refresh with Turbopack
 supabase start              # Local Supabase
 
 # Testing
-npm run test                # Run tests in watch mode
-npm run test:ui            # Open Vitest UI
-npm run test:coverage      # Generate coverage report
+bun run test                # Run tests in watch mode
+bun run test:ui            # Open Vitest UI
+bun run test:coverage      # Generate coverage report
 
 # Database
 supabase db reset           # Reset + migrate
 supabase gen types --local > types/supabase.ts
 
 # UI Components
-npx shadcn@latest add       # Add components
+bunx shadcn@latest add       # Add components
 
 # Production
-npm run build              # Type-safe build
+bun run build              # Type-safe build
 supabase db push          # Deploy migrations
 ```
 

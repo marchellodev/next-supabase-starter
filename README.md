@@ -18,7 +18,7 @@ A modern, production-ready starter template for building full-stack applications
 ## 📋 Prerequisites
 
 - Node.js 18+ 
-- npm/yarn/pnpm
+- bun
 - Supabase CLI (`brew install supabase/tap/supabase`)
 
 ## 🛠️ Getting Started
@@ -28,7 +28,7 @@ A modern, production-ready starter template for building full-stack applications
 ```bash
 git clone <your-repo-url>
 cd my-app
-npm install
+bun install
 ```
 
 ### 2. Set Up Supabase
@@ -36,7 +36,7 @@ npm install
 Start local Supabase development stack:
 
 ```bash
-npm run db:start
+bun run db:start
 ```
 
 This will output your local Supabase credentials. Update `.env.local`:
@@ -50,7 +50,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ### 3. Run Development Server
 
 ```bash
-npm run dev
+bun run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see your app.
@@ -87,21 +87,21 @@ Open [http://localhost:3000](http://localhost:3000) to see your app.
 
 ```bash
 # Development
-npm run dev              # Start dev server with Turbopack
-npm run build           # Build for production
-npm run start           # Start production server
-npm run lint            # Run ESLint
+bun run dev              # Start dev server with Turbopack
+bun run build           # Build for production
+bun run start           # Start production server
+bun run lint            # Run ESLint
 
 # Database
-npm run db:start        # Start local Supabase
-npm run db:stop         # Stop local Supabase
-npm run db:reset        # Reset database
-npm run db:types        # Generate TypeScript types
-npm run db:push         # Push migrations to remote
+bun run db:start        # Start local Supabase
+bun run db:stop         # Stop local Supabase
+bun run db:reset        # Reset database
+bun run db:types        # Generate TypeScript types
+bun run db:push         # Push migrations to remote
 
 # Testing
-npm run test            # Run tests in watch mode
-npm run test:ui         # Open Vitest UI
+bun run test            # Run tests in watch mode
+bun run test:ui         # Open Vitest UI
 ```
 
 ## 🏗️ Development Workflow
@@ -115,14 +115,14 @@ supabase migration new create_posts_table
 
 2. Apply locally and regenerate types:
 ```bash
-npm run db:reset
-npm run db:types
+bun run db:reset
+bun run db:types
 ```
 
 ### Adding UI Components
 
 ```bash
-npx shadcn@latest add button card dialog
+bunx shadcn@latest add button card dialog
 ```
 
 ### Creating Features
@@ -141,7 +141,7 @@ Write tests for:
 - Error states and edge cases
 
 ```bash
-npm run test
+bun run test
 ```
 
 ## 📚 Key Concepts
