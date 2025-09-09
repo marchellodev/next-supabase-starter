@@ -354,147 +354,6 @@ export function useRealtime<T extends keyof Database['public']['Tables']>(
 }
 ```
 
-## 🧪 Testing Infrastructure (Vitest)
-
-### When to Test
-
-- **Business logic** in utilities and hooks
-- **Server Actions** with mocked Supabase client
-- **Component behavior** not visual appearance
-- **Error states** and edge cases
-
-### Setup
-
-```bash
-bun i -D vitest @testing-library/react @testing-library/user-event @vitejs/plugin-react jsdom
-```
-
-```typescript
-// vitest.config.ts
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-import path from 'path'
-
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom',
-    setupFiles: './test/setup.ts',
-    globals: true,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './'),
-    },
-  },
-})
-
-// test/setup.ts
-import '@testing-library/jest-dom'
-import { vi } from 'vitest'
-
-// Mock Supabase client
-vi.mock('@/lib/supabase/client', () => ({
-  createClient: () => ({
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => Promise.resolve({ data: [], error: null })),
-      })),
-      insert: vi.fn(() => ({
-        select: vi.fn(() => ({
-          single: vi.fn(() => Promise.resolve({ data: {}, error: null })),
-        })),
-      })),
-    })),
-    auth: {
-      getUser: vi.fn(() => Promise.resolve({ data: { user: null }, error: null })),
-    },
-  }),
-}))
-```
-
-### Testing Patterns
-
-```typescript
-// components/features/posts/__tests__/post-card.test.tsx
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { PostCard } from '../post-card'
-
-describe('PostCard', () => {
-  const mockPost = {
-    id: '1',
-    title: 'Test Post',
-    content: 'Test content',
-    author: { name: 'John' },
-  }
-
-  it('renders post content', () => {
-    render(<PostCard post={mockPost} />)
-    expect(screen.getByText('Test Post')).toBeInTheDocument()
-    expect(screen.getByText('Test content')).toBeInTheDocument()
-  })
-
-  it('calls onLike when like button clicked', async () => {
-    const onLike = vi.fn()
-    const user = userEvent.setup()
-    
-    render(<PostCard post={mockPost} onLike={onLike} />)
-    await user.click(screen.getByRole('button', { name: /like/i }))
-    
-    expect(onLike).toHaveBeenCalledWith(mockPost.id)
-  })
-})
-
-// server/actions/__tests__/posts.test.ts
-import { createPost } from '../posts'
-import { createClient } from '@/lib/supabase/server'
-
-vi.mock('@/lib/supabase/server')
-
-describe('createPost', () => {
-  it('creates post and returns data', async () => {
-    const mockSupabase = {
-      from: vi.fn(() => ({
-        insert: vi.fn(() => ({
-          select: vi.fn(() => ({
-            single: vi.fn(() => ({ 
-              data: { id: '1', title: 'New Post' }, 
-              error: null 
-            })),
-          })),
-        })),
-      })),
-    }
-    
-    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
-    
-    const result = await createPost({ title: 'New Post', content: 'Content' })
-    expect(result).toEqual({ id: '1', title: 'New Post' })
-  })
-
-  it('throws error on database failure', async () => {
-    const mockSupabase = {
-      from: vi.fn(() => ({
-        insert: vi.fn(() => ({
-          select: vi.fn(() => ({
-            single: vi.fn(() => ({ 
-              data: null, 
-              error: new Error('Database error') 
-            })),
-          })),
-        })),
-      })),
-    }
-    
-    vi.mocked(createClient).mockResolvedValue(mockSupabase as any)
-    
-    await expect(createPost({ title: 'Test', content: 'Test' }))
-      .rejects.toThrow('Database error')
-  })
-})
-```
-
 ## 📊 Database Patterns
 
 ### Type-Safe Queries
@@ -588,7 +447,6 @@ async function PostsList() {
 ```json
 {
   "scripts": {
-    "dev": "next dev --turbo",
     "build": "next build",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -599,6 +457,8 @@ async function PostsList() {
   }
 }
 ```
+
+Don't run the `bun run dev` yourself, ask the user to do it!
 
 ### Environment Variables
 
@@ -618,10 +478,6 @@ export const env = envSchema.parse(process.env)
 ## ⚡ Key Commands
 
 ```bash
-# Development
-bun run dev --turbo          # Fast refresh with Turbopack
-supabase start              # Local Supabase
-
 # Testing
 bun run test                # Run tests in watch mode
 bun run test:ui            # Open Vitest UI
